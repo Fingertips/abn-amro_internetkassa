@@ -14,5 +14,11 @@ module AbnAmro
         test? ? TEST_URL : PRODUCTION_URL
       end
     end
+    
+    attr_accessor :order_id, :amount, :description
+    
+    def initialize(options = {})
+      options.each { |k,v| send("#{k}=", v) }
+    end
   end
 end

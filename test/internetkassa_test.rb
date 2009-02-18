@@ -1,4 +1,4 @@
-require File.expand_path('../../test_helper', __FILE__)
+require File.expand_path('../test_helper', __FILE__)
 
 describe "AbnAmro::Internetkassa, class methods" do
   it "should return whether or not it's in test mode" do
@@ -25,5 +25,21 @@ describe "AbnAmro::Internetkassa, class methods" do
     ensure
       AbnAmro::Internetkassa.test = true
     end
+  end
+end
+
+describe "AbnAmro::Internetkassa, an instance" do
+  before do
+    @instance = AbnAmro::Internetkassa.new(
+      :order_id => 123,
+      :amount => 1000,
+      :description => "HappyHardcore vol. 123 - the ballads"
+    )
+  end
+  
+  it "should have assigned the constructor arguments" do
+    @instance.order_id.should == 123
+    @instance.amount.should == 1000
+    @instance.description.should == "HappyHardcore vol. 123 - the ballads"
   end
 end
