@@ -36,11 +36,12 @@ end
 
 describe "AbnAmro::Internetkassa, an instance" do
   before do
-    @instance = AbnAmro::Internetkassa.new(
+    @valid_attributes = {
       :order_id => 123,
       :amount => 1000,
       :description => "HappyHardcore vol. 123 - the ballads"
-    )
+    }
+    @instance = AbnAmro::Internetkassa.new(@valid_attributes)
   end
   
   it "should have assigned the constructor arguments" do
@@ -49,12 +50,36 @@ describe "AbnAmro::Internetkassa, an instance" do
     @instance.description.should == "HappyHardcore vol. 123 - the ballads"
   end
   
-  xit "should return the key-value pairs according to the Internetkassa specs" do
-    @instance.post_data.should == {
+  it "should have merged default values" do
+    @instance.currency.should == 'EUR'
+    @instance.language.should == 'nl_NL'
+  end
+  
+  it "should have access to the pspid/merchant_id" do
+    @instance.send(:merchant_id).should == AbnAmro::Internetkassa.merchant_id
+  end
+  
+  it "should verify that the mandatory values are specified or raise an ArgumentError" do
+    %w{ merchant_id order_id amount currency language }.each do |key|
+      instance = AbnAmro::Internetkassa.new(@valid_attributes)
+      instance.stubs(key).returns(nil)
+      lambda { instance.send(:verify_values!) }.should.raise ArgumentError
+    end
+  end
+  
+  it "should return the key-value pairs that should be POSTed, according to the Internetkassa specs" do
+    @instance.data.should == {
       :PSPID => AbnAmro::Internetkassa.merchant_id,
       :orderID => @instance.order_id,
       :amount => @instance.amount,
+      :currency => @instance.currency,
+      :language => @instance.language,
       :COM => @instance.description
     }
+  end
+  
+  it "should check if all mandatory values are specified before returning the `data'" do
+    @instance.expects(:verify_values!)
+    @instance.data
   end
 end
