@@ -82,4 +82,16 @@ describe "AbnAmro::Internetkassa, an instance" do
     @instance.expects(:verify_values!)
     @instance.data
   end
+  
+  it "should merge any optional arguments with the data" do
+    AbnAmro::Internetkassa.new(@valid_attributes, :TITLE => 'My Transaction').data.should == {
+      :PSPID => AbnAmro::Internetkassa.merchant_id,
+      :orderID => @instance.order_id,
+      :amount => @instance.amount,
+      :currency => @instance.currency,
+      :language => @instance.language,
+      :COM => @instance.description,
+      :TITLE => 'My Transaction'
+    }
+  end
 end

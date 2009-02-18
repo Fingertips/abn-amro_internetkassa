@@ -23,20 +23,21 @@ module AbnAmro
     
     attr_accessor :order_id, :amount, :description, :currency, :language
     
-    def initialize(options = {})
-      DEFAULT_VALUES.merge(options).each { |k,v| send("#{k}=", v) }
+    def initialize(arguments = {}, options = {})
+      DEFAULT_VALUES.merge(arguments).each { |k,v| send("#{k}=", v) }
+      @options = options
     end
     
     def data
       verify_values!
-      {
+      @options.merge(
         :PSPID => merchant_id,
         :orderID => @order_id,
         :amount => @amount,
         :currency => @currency,
         :language => @language,
         :COM => @description
-      }
+      )
     end
     
     private
