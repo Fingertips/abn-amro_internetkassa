@@ -5,12 +5,12 @@ require 'hpricot'
 
 describe "AbnAmro::Internetkassa, when remote testing" do
   before do
-    @valid_attributes = {
+    @instance = AbnAmro::Internetkassa.new(
       :order_id => 123,
       :amount => 1000,
-      :description => "HappyHardcore vol. 123 - the ballads"
-    }
-    @instance = AbnAmro::Internetkassa.new(@valid_attributes)
+      :description => "HappyHardcore vol. 123 - the ballads",
+      :TITLE => 'HappyHardcore vol. 123 - the ballads'
+    )
   end
   
   it "should have the right data to make a successful POST request" do
@@ -20,7 +20,8 @@ describe "AbnAmro::Internetkassa, when remote testing" do
     parse_response(response).should == {
       :beneficiary => 'Fingertips BV',
       :order_id =>    '123',
-      :amount =>      '10.00 EUR'
+      :amount =>      '10.00 EUR',
+      :title =>       'HappyHardcore vol. 123 - the ballads'
     }
   end
   
@@ -33,8 +34,8 @@ describe "AbnAmro::Internetkassa, when remote testing" do
   
   def parse_response(response)
     results = {}
-    doc = Hpricot(response.body)
     
+    doc = Hpricot(response.body)
     (doc / '#ncol_ref' / 'tr').each do |row|
       cols = (row / 'td')
       
@@ -50,6 +51,7 @@ describe "AbnAmro::Internetkassa, when remote testing" do
       results[key] = cols.last.inner_text.strip
     end
     
+    results[:title] = (doc / 'title').inner_text.strip
     results
   end
 end
