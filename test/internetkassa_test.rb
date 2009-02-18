@@ -84,7 +84,8 @@ describe "AbnAmro::Internetkassa, an instance" do
   end
   
   it "should merge any optional arguments with the data" do
-    AbnAmro::Internetkassa.new(@valid_attributes, :TITLE => 'My Transaction').data.should == {
+    @valid_attributes[:TITLE] = 'My Transaction'
+    AbnAmro::Internetkassa.new(@valid_attributes).data.should == {
       :PSPID => AbnAmro::Internetkassa.merchant_id,
       :orderID => @instance.order_id,
       :amount => @instance.amount,

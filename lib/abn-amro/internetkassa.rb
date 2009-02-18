@@ -23,9 +23,16 @@ module AbnAmro
     
     attr_accessor :order_id, :amount, :description, :currency, :language
     
-    def initialize(arguments = {}, options = {})
-      DEFAULT_VALUES.merge(arguments).each { |k,v| send("#{k}=", v) }
-      @options = options
+    def initialize(options = {})
+      @options = {}
+      
+      DEFAULT_VALUES.merge(options).each do |k,v|
+        if respond_to?("#{k}=")
+          send("#{k}=", v)
+        else
+          @options[k] = v
+        end
+      end
     end
     
     def data
