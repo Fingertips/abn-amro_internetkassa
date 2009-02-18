@@ -5,6 +5,12 @@ describe "AbnAmro::Internetkassa, class methods" do
     assert AbnAmro::Internetkassa.test?
   end
   
+  it "should return the PSPID with #pspid or its aliased handsome cousin #merchant_id" do
+    # set in test_helper.rb
+    AbnAmro::Internetkassa.pspid.should == 'fingertips'
+    AbnAmro::Internetkassa.merchant_id.should == 'fingertips'
+  end
+  
   it "should have the correct service_urls" do
     AbnAmro::Internetkassa::TEST_URL.should ==
       "https://internetkassa.abnamro.nl/ncol/test/orderstandard.asp"
@@ -41,5 +47,14 @@ describe "AbnAmro::Internetkassa, an instance" do
     @instance.order_id.should == 123
     @instance.amount.should == 1000
     @instance.description.should == "HappyHardcore vol. 123 - the ballads"
+  end
+  
+  xit "should return the key-value pairs according to the Internetkassa specs" do
+    @instance.post_data.should == {
+      :PSPID => AbnAmro::Internetkassa.merchant_id,
+      :orderID => @instance.order_id,
+      :amount => @instance.amount,
+      :COM => @instance.description
+    }
   end
 end

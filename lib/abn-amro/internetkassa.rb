@@ -4,7 +4,10 @@ module AbnAmro
     TEST_URL       = "https://internetkassa.abnamro.nl/ncol/test/orderstandard.asp"
     
     class << self
-      attr_writer :test
+      attr_accessor :pspid, :test
+      
+      alias_method :merchant_id=, :pspid=
+      alias_method :merchant_id,  :pspid
       
       def test?
         @test
