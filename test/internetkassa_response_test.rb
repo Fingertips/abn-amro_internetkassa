@@ -30,6 +30,8 @@ describe "AbnAmro::Internetkassa::Response, in general" do
   end
 end
 
+# With actual fixture data
+
 describe "AbnAmro::Internetkassa::Response, with a successful payment" do
   before do
     @response = AbnAmro::Internetkassa::Response.new(fixture(:succeeded))

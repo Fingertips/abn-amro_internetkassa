@@ -8,7 +8,7 @@ module AbnAmro
       end
       
       def success?
-        @params['STATUS'] == '9'
+        error_code.nil?
       end
       
       def retry?
