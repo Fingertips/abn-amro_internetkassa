@@ -6,6 +6,7 @@ require File.expand_path('../helpers/view_helper', __FILE__)
 
 $:.unshift File.expand_path('../../lib', __FILE__)
 require 'abn-amro/internetkassa'
+require 'abn-amro/internetkassa_response'
 require 'abn-amro/internetkassa_helpers'
 
 AbnAmro::Internetkassa.test = true
