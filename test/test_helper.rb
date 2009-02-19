@@ -9,8 +9,8 @@ require File.expand_path('../fixtures', __FILE__)
 
 $:.unshift File.expand_path('../../lib', __FILE__)
 require 'abn-amro/internetkassa'
-require 'abn-amro/internetkassa_response'
-require 'abn-amro/internetkassa_helpers'
+require 'abn-amro/internetkassa/response'
+require 'abn-amro/internetkassa/helpers'
 
 AbnAmro::Internetkassa.test = true
 AbnAmro::Internetkassa.merchant_id = 'fingertips'
