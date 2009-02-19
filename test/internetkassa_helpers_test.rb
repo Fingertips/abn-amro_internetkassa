@@ -1,17 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class TestController
-  def url_for(options)
-    "http://www.example.com"
-  end
-  
-  def protect_against_forgery?
-    false
-  end
-end
-
 describe "AbnAmro::Internetkassa::Helpers", ActionView::TestCase do
-  include ActionView::Helpers::FormTagHelper
   tests AbnAmro::Internetkassa::Helpers
   
   before do

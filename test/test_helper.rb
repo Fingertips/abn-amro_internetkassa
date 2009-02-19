@@ -2,9 +2,7 @@ require 'rubygems' rescue LoadError
 require 'test/spec'
 require 'mocha'
 
-require 'action_controller'
-require 'action_view'
-require 'action_view/test_case'
+require File.expand_path('../helpers/view_helper', __FILE__)
 
 $:.unshift File.expand_path('../../lib', __FILE__)
 require 'abn-amro/internetkassa'
