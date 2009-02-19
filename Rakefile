@@ -22,13 +22,12 @@ namespace :test do
     controller = TestController.new
     controller.extend(ActionView::Helpers)
     controller.extend(AbnAmro::Internetkassa::Helpers)
-    form = controller.internetkassa_form_tag(instance) { '<input type="submit" />' }
     
     File.open('form_test.html', 'w') do |f|
       f << %{
         <html>
           <body>
-          #{form}
+          #{controller.internetkassa_form_tag(instance) { '<input type="submit" />' }}
           </body>
         </html>
       }
