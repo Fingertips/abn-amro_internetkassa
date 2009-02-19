@@ -16,6 +16,7 @@ namespace :test do
       :order_id => Time.now.to_i,
       :amount => 1031,
       :description => "HappyHardcore vol. 123 - the ballads",
+      :endpoint_url => ENV['URL'] || "http://example.com/payments",
       :TITLE => 'HappyHardcore vol. 123 - the ballads'
     )
     
