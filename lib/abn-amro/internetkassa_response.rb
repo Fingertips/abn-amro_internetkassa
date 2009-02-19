@@ -11,6 +11,10 @@ module AbnAmro
         @params['STATUS'] == '9'
       end
       
+      def retry?
+        Codes::ERROR_CODES[error_code][:retry] if error_code
+      end
+      
       def error_code
         @params['NCERROR'] unless @params['NCERROR'] == '0'
       end
