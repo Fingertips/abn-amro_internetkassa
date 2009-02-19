@@ -47,7 +47,8 @@ module AbnAmro
         :amount => @amount,
         :currency => @currency,
         :language => @language,
-        :COM => @description
+        :COM => @description,
+        :SHASign => signature
       )
     end
     

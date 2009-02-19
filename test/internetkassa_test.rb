@@ -87,7 +87,8 @@ describe "AbnAmro::Internetkassa, an instance" do
       :amount => @instance.amount,
       :currency => @instance.currency,
       :language => @instance.language,
-      :COM => @instance.description
+      :COM => @instance.description,
+      :SHASign => @instance.send(:signature)
     }
   end
   
@@ -105,6 +106,7 @@ describe "AbnAmro::Internetkassa, an instance" do
       :currency => @instance.currency,
       :language => @instance.language,
       :COM => @instance.description,
+      :SHASign => @instance.send(:signature),
       :TITLE => 'My Transaction'
     }
   end
