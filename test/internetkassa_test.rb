@@ -6,9 +6,13 @@ describe "AbnAmro::Internetkassa, class methods" do
   end
   
   it "should return the PSPID with #pspid or its aliased handsome cousin #merchant_id" do
-    # set in test_helper.rb
     AbnAmro::Internetkassa.pspid.should == 'fingertips'
     AbnAmro::Internetkassa.merchant_id.should == 'fingertips'
+  end
+  
+  it "should return the passphrase used to sign the messages to the payment server" do
+    AbnAmro::Internetkassa.shasign.should == 'supersecret'
+    AbnAmro::Internetkassa.passphrase.should == 'supersecret'
   end
   
   it "should have the correct service_urls" do
@@ -59,12 +63,21 @@ describe "AbnAmro::Internetkassa, an instance" do
     @instance.send(:merchant_id).should == AbnAmro::Internetkassa.merchant_id
   end
   
+  it "should have access to the shasign/passphrase" do
+    @instance.send(:passphrase).should == AbnAmro::Internetkassa.passphrase
+  end
+  
   it "should verify that the mandatory values are specified or raise an ArgumentError" do
     %w{ merchant_id order_id amount currency language }.each do |key|
       instance = AbnAmro::Internetkassa.new(@valid_attributes)
       instance.stubs(key).returns(nil)
       lambda { instance.send(:verify_values!) }.should.raise ArgumentError
     end
+  end
+  
+  it "should create a SHA1 signature for the message" do
+    message = "#{@instance.order_id}#{@instance.amount}#{@instance.currency}#{AbnAmro::Internetkassa.merchant_id}#{AbnAmro::Internetkassa.passphrase}"
+    @instance.send(:signature).should == Digest::SHA1.hexdigest(message)
   end
   
   it "should return the key-value pairs that should be POSTed, according to the Internetkassa specs" do

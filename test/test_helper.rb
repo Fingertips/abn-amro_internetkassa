@@ -9,4 +9,5 @@ require 'abn-amro/internetkassa'
 require 'abn-amro/internetkassa_helpers'
 
 AbnAmro::Internetkassa.test = true
-AbnAmro::Internetkassa.pspid = 'fingertips'
+AbnAmro::Internetkassa.merchant_id = 'fingertips'
+AbnAmro::Internetkassa.passphrase = 'supersecret'

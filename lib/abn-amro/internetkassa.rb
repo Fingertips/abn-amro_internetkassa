@@ -1,10 +1,15 @@
+require "digest/sha1"
+
 module AbnAmro
   class Internetkassa
     class << self
-      attr_accessor :pspid, :test
+      attr_accessor :pspid, :shasign, :test
       
       alias_method :merchant_id=, :pspid=
       alias_method :merchant_id,  :pspid
+      
+      alias_method :passphrase=,  :shasign=
+      alias_method :passphrase,   :shasign
       
       def test?
         @test
@@ -53,10 +58,18 @@ module AbnAmro
       self.class.merchant_id
     end
     
+    def passphrase
+      self.class.passphrase
+    end
+    
     def verify_values!
       MANDATORY_VALUES.each do |key|
         raise ArgumentError, "`#{key}' can't be blank" if send(key).nil?
       end
+    end
+    
+    def signature
+      Digest::SHA1.hexdigest("#{@order_id}#{@amount}#{@currency}#{merchant_id}#{passphrase}")
     end
   end
 end
