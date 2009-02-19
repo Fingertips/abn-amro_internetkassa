@@ -24,16 +24,16 @@ describe "AbnAmro::Internetkassa::Helpers", ActionView::TestCase do
   end
   
   it "should create a form with data from a AbnAmro::Internetkassa instance and yield" do
-    internetkassa_form_tag(@instance) { concat "<p>What a nice looking payment page!</p>" }
+    internetkassa_form_tag(@instance) { concat submit_tag('Betaal') }
     
-    expected = %{<form action="#{AbnAmro::Internetkassa.service_url}" method="post">}
+    expected = [%{<form action="#{AbnAmro::Internetkassa.service_url}" method="post">}]
     @instance.data.each do |name, value|
-      expected += %{<input name="#{name}" type="hidden" value="#{value}" />}
+      expected << %{<input name="#{name}" type="hidden" value="#{value}" />}
     end
-    expected += "<p>What a nice looking payment page!</p>"
-    expected += "</form>"
+    expected << %{<input name="commit" type="submit" value="Betaal" />}
+    expected << "</form>"
     
-    assert_dom_equal expected, output_buffer
+    assert_dom_equal expected.join("\n"), output_buffer
   end
   
   private
