@@ -1,3 +1,4 @@
+require 'abn-amro/internetkassa/response'
 require "digest/sha1"
 
 module AbnAmro

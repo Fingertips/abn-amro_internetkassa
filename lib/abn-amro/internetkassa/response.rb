@@ -1,4 +1,4 @@
-require File.expand_path('../response_codes', __FILE__)
+require 'abn-amro/internetkassa/response_codes'
 
 module AbnAmro
   class Internetkassa
