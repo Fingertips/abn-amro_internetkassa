@@ -13,8 +13,8 @@ namespace :test do
     require File.expand_path('../test/test_helper', __FILE__)
     
     instance = AbnAmro::Internetkassa.new(
-      :order_id => 123,
-      :amount => 1000,
+      :order_id => Time.now.to_i,
+      :amount => 1031,
       :description => "HappyHardcore vol. 123 - the ballads",
       :TITLE => 'HappyHardcore vol. 123 - the ballads'
     )

@@ -43,15 +43,23 @@ describe "AbnAmro::Internetkassa, an instance" do
     @valid_attributes = {
       :order_id => 123,
       :amount => 1000,
-      :description => "HappyHardcore vol. 123 - the ballads"
+      :description => "HappyHardcore vol. 123 - the ballads",
+      :endpoint_url => "http://example.com/payments"
     }
     @instance = AbnAmro::Internetkassa.new(@valid_attributes)
   end
   
   it "should have assigned the constructor arguments" do
-    @instance.order_id.should == 123
-    @instance.amount.should == 1000
+    @instance.order_id.should    == 123
+    @instance.amount.should      == 1000
     @instance.description.should == "HappyHardcore vol. 123 - the ballads"
+  end
+  
+  it "should have used the endpoint_url shortcut to set all endpoint urls" do
+    @instance.accept_url.should    == "http://example.com/payments"
+    @instance.decline_url.should   == "http://example.com/payments"
+    @instance.exception_url.should == "http://example.com/payments"
+    @instance.cancel_url.should    == "http://example.com/payments"
   end
   
   it "should have merged default values" do
@@ -82,13 +90,17 @@ describe "AbnAmro::Internetkassa, an instance" do
   
   it "should return the key-value pairs that should be POSTed, according to the Internetkassa specs" do
     @instance.data.should == {
-      :PSPID => AbnAmro::Internetkassa.merchant_id,
-      :orderID => @instance.order_id,
-      :amount => @instance.amount,
-      :currency => @instance.currency,
-      :language => @instance.language,
-      :COM => @instance.description,
-      :SHASign => @instance.send(:signature)
+      :PSPID        => AbnAmro::Internetkassa.merchant_id,
+      :orderID      => @instance.order_id,
+      :amount       => @instance.amount,
+      :currency     => @instance.currency,
+      :language     => @instance.language,
+      :COM          => @instance.description,
+      :SHASign      => @instance.send(:signature),
+      :accepturl    => @valid_attributes[:endpoint_url],
+      :declineurl   => @valid_attributes[:endpoint_url],
+      :exceptionurl => @valid_attributes[:endpoint_url],
+      :cancelurl    => @valid_attributes[:endpoint_url]
     }
   end
   
@@ -100,14 +112,18 @@ describe "AbnAmro::Internetkassa, an instance" do
   it "should merge any optional arguments with the data" do
     @valid_attributes[:TITLE] = 'My Transaction'
     AbnAmro::Internetkassa.new(@valid_attributes).data.should == {
-      :PSPID => AbnAmro::Internetkassa.merchant_id,
-      :orderID => @instance.order_id,
-      :amount => @instance.amount,
-      :currency => @instance.currency,
-      :language => @instance.language,
-      :COM => @instance.description,
-      :SHASign => @instance.send(:signature),
-      :TITLE => 'My Transaction'
+      :PSPID        => AbnAmro::Internetkassa.merchant_id,
+      :orderID      => @instance.order_id,
+      :amount       => @instance.amount,
+      :currency     => @instance.currency,
+      :language     => @instance.language,
+      :COM          => @instance.description,
+      :SHASign      => @instance.send(:signature),
+      :accepturl    => @valid_attributes[:endpoint_url],
+      :declineurl   => @valid_attributes[:endpoint_url],
+      :exceptionurl => @valid_attributes[:endpoint_url],
+      :cancelurl    => @valid_attributes[:endpoint_url],
+      :TITLE        => 'My Transaction'
     }
   end
 end

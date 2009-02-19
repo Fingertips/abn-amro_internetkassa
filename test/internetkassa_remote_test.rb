@@ -6,7 +6,7 @@ require 'hpricot'
 describe "AbnAmro::Internetkassa, when remote testing" do
   before do
     @instance = AbnAmro::Internetkassa.new(
-      :order_id => 123,
+      :order_id => Time.now.to_i.to_s,
       :amount => 1000,
       :description => "HappyHardcore vol. 123 - the ballads",
       :TITLE => 'HappyHardcore vol. 123 - the ballads'
@@ -19,7 +19,7 @@ describe "AbnAmro::Internetkassa, when remote testing" do
     
     parse_response(response).should == {
       :beneficiary => 'Fingertips BV',
-      :order_id =>    '123',
+      :order_id =>    @instance.order_id,
       :amount =>      '10.00 EUR',
       :title =>       'HappyHardcore vol. 123 - the ballads'
     }

@@ -26,6 +26,7 @@ module AbnAmro
     TEST_URL         = "https://internetkassa.abnamro.nl/ncol/test/orderstandard.asp"
     
     attr_accessor :order_id, :amount, :description, :currency, :language
+    attr_accessor :accept_url, :decline_url, :exception_url, :cancel_url
     
     def initialize(options = {})
       @options = {}
@@ -39,16 +40,26 @@ module AbnAmro
       end
     end
     
+    # Shortcut which sets the accept_url, decline_url, cancel_url,
+    # exception_url, and cancel_url to the specified +url+.
+    def endpoint_url=(url)
+      @accept_url = @decline_url = @exception_url = @cancel_url = url
+    end
+    
     def data
       verify_values!
       @options.merge(
-        :PSPID => merchant_id,
-        :orderID => @order_id,
-        :amount => @amount,
-        :currency => @currency,
-        :language => @language,
-        :COM => @description,
-        :SHASign => signature
+        :PSPID        => merchant_id,
+        :orderID      => @order_id,
+        :amount       => @amount,
+        :currency     => @currency,
+        :language     => @language,
+        :COM          => @description,
+        :SHASign      => signature,
+        :accepturl    => @accept_url,
+        :declineurl   => @decline_url,
+        :exceptionurl => @exception_url,
+        :cancelurl    => @cancel_url
       )
     end
     

@@ -10,6 +10,7 @@ describe "AbnAmro::Internetkassa::Helpers", ActionView::TestCase do
       :order_id => 123,
       :amount => 1000,
       :description => "HappyHardcore vol. 123 - the ballads",
+      :endpoint_url => "http://example.com/payments",
       :TITLE => 'HappyHardcore vol. 123 - the ballads'
     )
     
