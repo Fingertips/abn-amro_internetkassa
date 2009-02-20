@@ -1,3 +1,5 @@
 === ABN-AMRO Internetkassa
 
 A library for integrating payments using ABN-AMRO Internetkassa (Dutch bank).
+
+Need to write documentation and release 1.0.0

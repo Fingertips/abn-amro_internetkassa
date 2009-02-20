@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'internetkassa'
-  spec.version = '0.9.0'
+  spec.version = '0.9.1'
   
   spec.homepage = 'https://github.com/Fingertips/abn-amro_internetkassa/tree/master'
   spec.description = spec.summary = %{A library to make online payments using ABN-AMRO (Dutch bank) Internetkassa.}
