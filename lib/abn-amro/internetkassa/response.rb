@@ -3,22 +3,26 @@ require 'abn-amro/internetkassa/response_codes'
 module AbnAmro
   class Internetkassa
     class Response
+      attr_reader :params
+      
       def initialize(params)
         @params = params
       end
       
       # attributes
       
-      def order_id;       @params['orderID']                              end
-      def payment_id;     @params['PAYID']                                end
-      def payment_method; @params['PM']                                   end
-      def acceptance;     @params['ACCEPTANCE']                           end
-      def card_number;    @params['CARDNO']                               end
-      def status_code;    @params['STATUS']                               end
-      def error_code;     @params['NCERROR'] if @params['NCERROR'] != '0' end
-      def client_ip;      @params['IP']                                   end # TODO: double check this is from client
-      def signature;      @params['SHASIGN']                              end
-      def currency;       @params['currency']                             end
+      def order_id;             @params['orderID']                              end
+      def payment_id;           @params['PAYID']                                end
+      def payment_method;       @params['PM']                                   end
+      def acceptance;           @params['ACCEPTANCE']                           end
+      def currency;             @params['currency']                             end
+      def status_code;          @params['STATUS']                               end
+      def error_code;           @params['NCERROR'] if @params['NCERROR'] != '0' end
+      def signature;            @params['SHASIGN']                              end
+      def customer_name;        @params['CN']                                   end
+      def card_brand;           @params['BRAND']                                end
+      def card_number;          @params['CARDNO']                               end
+      def card_expiration_date; @params['ED']                                   end
       
       # methods
       
