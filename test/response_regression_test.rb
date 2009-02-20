@@ -2,6 +2,7 @@ require File.expand_path('../test_helper', __FILE__)
 
 describe "AbnAmro::Internetkassa::Response, regression tests" do
   before do
+    AbnAmro::Internetkassa::Response.any_instance.stubs(:valid?).returns(true)
     @response = AbnAmro::Internetkassa::Response.new({})
   end
   
