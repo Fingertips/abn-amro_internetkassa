@@ -24,6 +24,14 @@ module AbnAmro
       def card_number;          @params['CARDNO']                               end
       def card_expiration_date; @params['ED']                                   end
       
+      def amount
+        @amount ||= (@params['amount'].to_f * 100).to_i
+      end
+      
+      def transaction_date
+        @transaction_date ||= Date.parse(@params['TRXDATE'], true)
+      end
+      
       # methods
       
       def success?

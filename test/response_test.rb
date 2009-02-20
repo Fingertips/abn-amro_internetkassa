@@ -25,6 +25,41 @@ describe "AbnAmro::Internetkassa::Response, in general" do
     @response.card_brand.should           == 'iDEAL'
     @response.card_expiration_date.should == ''
   end
+  
+  it "should return the amount in cents" do
+    @response.params['amount'] = '10'
+    @response.amount.should == 1000
+  end
+  
+  it "should return the amount with decimals in cents" do
+    @response.params['amount'] = '10.31'
+    @response.amount.should == 1031
+  end
+  
+  it "should return the transaction date as a Date instance" do
+    @response.transaction_date.should == Date.parse('02/19/2009')
+  end
+  
+  xit "should create a SHA1 signature for the message" do
+    message =  @response.order_id
+    message += @response.currency
+    message += @response.amount
+    message += @response.payment_method
+    message += @response.acceptance
+    message += @response.status_code
+    message += @response.card_number
+    message += @response.payment_id
+    message += @response.error_code.to_s
+    message += @response.card_brand
+    
+    message += AbnAmro::Internetkassa.passphrase
+    
+    @response.send(:signature).should == Digest::SHA1.hexdigest(message)
+  end
+  
+  xit "should return whether or not the signature matches the message" do
+    @response.send(:valid?)
+  end
 end
 
 describe "AbnAmro::Internetkassa::Response, with a successful payment" do
