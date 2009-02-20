@@ -85,7 +85,7 @@ describe "AbnAmro::Internetkassa, an instance" do
   
   it "should create a SHA1 signature for the message" do
     message = "#{@instance.order_id}#{@instance.amount}#{@instance.currency}#{AbnAmro::Internetkassa.merchant_id}#{AbnAmro::Internetkassa.passphrase}"
-    @instance.send(:signature).should == Digest::SHA1.hexdigest(message)
+    @instance.send(:signature).should == Digest::SHA1.hexdigest(message).upcase
   end
   
   it "should return the key-value pairs that should be POSTed, according to the Internetkassa specs" do

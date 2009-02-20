@@ -81,7 +81,7 @@ module AbnAmro
     end
     
     def signature
-      Digest::SHA1.hexdigest("#{@order_id}#{@amount}#{@currency}#{merchant_id}#{passphrase}")
+      Digest::SHA1.hexdigest("#{@order_id}#{@amount}#{@currency}#{merchant_id}#{passphrase}").upcase
     end
   end
 end
