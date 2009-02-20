@@ -1,5 +1,20 @@
 require 'rake/testtask'
 
+namespace :gem do
+  directory 'pkg'
+  
+  desc 'Build the gem'
+  task :build => :pkg do
+    sh 'gem build internetkassa.gemspec'
+    sh 'mv internetkassa-*.gem pkg/'
+  end
+  
+  desc 'Install the gem'
+  task :install => :build do
+    sh 'sudo gem install pkg/internetkassa-*.gem'
+  end
+end
+
 Rake::TestTask.new do |t|
   t.test_files = FileList['test/**/*_test.rb']
   t.verbose = true
