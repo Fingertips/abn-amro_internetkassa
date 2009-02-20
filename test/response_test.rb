@@ -9,6 +9,22 @@ describe "AbnAmro::Internetkassa::Response, in general" do
     @response.params.should == fixture(:succeeded)
   end
   
+  it "should return whether or not the transaction was authorized" do
+    @response.stubs(:status_code).returns('5')
+    @response.should.be.authorized
+    
+    @response.stubs(:status_code).returns('9')
+    @response.should.not.be.authorized
+  end
+  
+  it "should return whether or not the transaction was captured" do
+    @response.stubs(:status_code).returns('9')
+    @response.should.be.captured
+    
+    @response.stubs(:status_code).returns('5')
+    @response.should.not.be.captured
+  end
+  
   it "should return the essential attributes" do
     @response.order_id.should       == '1235052040'
     @response.payment_id.should     == '3051611'
@@ -74,6 +90,10 @@ describe "AbnAmro::Internetkassa::Response, in general" do
       AbnAmro::Internetkassa::Response.new(params)
     }.should.raise AbnAmro::Internetkassa::Response::SignatureInvalidError
   end
+  
+  it "should return the message for the status code" do
+    @response.status_message.should == 'Payment requested'
+  end
 end
 
 describe "AbnAmro::Internetkassa::Response, with a successful payment" do
@@ -87,10 +107,6 @@ describe "AbnAmro::Internetkassa::Response, with a successful payment" do
   
   it "should not be retryable" do
     @response.should.not.retry
-  end
-  
-  xit "should return the status as a symbol" do
-    @response.status.should == :success
   end
   
   it "should return `nil' as the error code" do
@@ -115,10 +131,6 @@ describe "AbnAmro::Internetkassa::Response, with a failed payment" do
     @response.should.not.retry
   end
   
-  xit "should return the status as a symbol" do
-    @response.status.should == :failed
-  end
-  
   it "should return the error code" do
     @response.error_code.should == "30001001"
   end
@@ -141,10 +153,6 @@ describe "AbnAmro::Internetkassa::Response, with a cancelled payment" do
     @response.should.not.retry
   end
   
-  xit "should return the status as a symbol" do
-    @response.status.should == :cancelled
-  end
-  
   it "should return the error code" do
     @response.error_code.should == "30171001"
   end
@@ -165,10 +173,6 @@ describe "AbnAmro::Internetkassa::Response, when an exception occurred" do
   
   it "should not be retryable" do
     @response.should.not.retry
-  end
-  
-  xit "should return the status as a symbol" do
-    @response.status.should == :exception
   end
   
   it "should return the error code" do

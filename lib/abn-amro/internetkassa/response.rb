@@ -45,11 +45,23 @@ module AbnAmro
       end
       
       def success?
-        error_code.nil?
+        error_code.nil? && (authorized? || captured?)
+      end
+      
+      def authorized?
+        status_code == '5'
+      end
+      
+      def captured?
+        status_code == '9'
       end
       
       def retry?
         Codes::ERROR_CODES[error_code][:retry] if error_code
+      end
+      
+      def status_message
+        Codes::STATUS_CODES[status_code]
       end
       
       def error_message
