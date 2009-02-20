@@ -27,12 +27,12 @@ describe "AbnAmro::Internetkassa::Response, in general" do
   end
   
   it "should return the amount in cents" do
-    @response.params['amount'] = '10'
+    @response.instance_variable_set(:@params, 'amount' => '10')
     @response.amount.should == 1000
   end
   
   it "should return the amount with decimals in cents" do
-    @response.params['amount'] = '10.31'
+    @response.instance_variable_set(:@params, 'amount' => '10.31')
     @response.amount.should == 1031
   end
   
@@ -40,25 +40,39 @@ describe "AbnAmro::Internetkassa::Response, in general" do
     @response.transaction_date.should == Date.parse('02/19/2009')
   end
   
-  xit "should create a SHA1 signature for the message" do
+  it "should create a SHA1 signature for the message" do
     message =  @response.order_id
     message += @response.currency
-    message += @response.amount
+    message += @response.params['amount']
     message += @response.payment_method
     message += @response.acceptance
     message += @response.status_code
     message += @response.card_number
     message += @response.payment_id
-    message += @response.error_code.to_s
+    message += @response.params['NCERROR']
     message += @response.card_brand
     
     message += AbnAmro::Internetkassa.passphrase
     
-    @response.send(:signature).should == Digest::SHA1.hexdigest(message)
+    @response.send(:calculated_signature).should == Digest::SHA1.hexdigest(message).upcase
   end
   
-  xit "should return whether or not the signature matches the message" do
-    @response.send(:valid?)
+  it "should return that the signature matches the calculated_signature" do
+    @response.should.be.valid
+  end
+  
+  it "should return that the signature does NOT match the calculated_signature" do
+    @response.stubs(:signature).returns('NOT A VALID SHA1 SIGNATURE')
+    @response.should.not.be.valid
+  end
+  
+  it "should raise a SignatureInvalidError if initializing a response and the signature does not match the calculated_signature" do
+    params = fixture(:succeeded).dup
+    params['SHASIGN'] = 'NOT A VALID SHA1 SIGNATURE'
+    
+    lambda {
+      AbnAmro::Internetkassa::Response.new(params)
+    }.should.raise AbnAmro::Internetkassa::Response::SignatureInvalidError
   end
 end
 

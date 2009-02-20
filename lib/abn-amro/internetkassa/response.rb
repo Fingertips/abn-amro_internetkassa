@@ -3,10 +3,16 @@ require 'abn-amro/internetkassa/response_codes'
 module AbnAmro
   class Internetkassa
     class Response
+      class SignatureInvalidError < StandardError; end
+      
       attr_reader :params
       
       def initialize(params)
         @params = params
+        
+        unless valid?
+          raise SignatureInvalidError, "signature `#{signature}' does not match the signature calculated for this message `#{calculated_signature}'"
+        end
       end
       
       # attributes
@@ -34,6 +40,10 @@ module AbnAmro
       
       # methods
       
+      def valid?
+        signature == calculated_signature
+      end
+      
       def success?
         error_code.nil?
       end
@@ -44,6 +54,25 @@ module AbnAmro
       
       def error_message
         Codes::ERROR_CODES[error_code][:explanation] if error_code
+      end
+      
+      private
+      
+      def calculated_signature
+        message = ''
+        message << order_id
+        message << currency
+        message << @params['amount']
+        message << payment_method
+        message << acceptance
+        message << status_code
+        message << card_number
+        message << payment_id
+        message << @params['NCERROR']
+        message << card_brand
+        message << Internetkassa.passphrase
+        
+        Digest::SHA1.hexdigest(message).upcase
       end
     end
   end
