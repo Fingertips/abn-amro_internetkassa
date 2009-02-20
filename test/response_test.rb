@@ -1,5 +1,23 @@
 require File.expand_path('../test_helper', __FILE__)
 
+describe "AbnAmro::Internetkassa::Response, in general" do
+  before do
+    @response = AbnAmro::Internetkassa::Response.new(fixture(:succeeded))
+  end
+  
+  it "should return the essential attributes" do
+    @response.order_id.should == '1235052040'
+    @response.payment_id.should == '3051611'
+    @response.payment_method.should == 'iDEAL'
+    @response.acceptance.should == '0000000000'
+    @response.card_number.should == '11-XXXX-11'
+    @response.status_code.should == '9'
+    @response.client_ip.should == '83.68.2.74'
+    @response.signature.should == '7537DD222E35EE9F9842921BD90C2CBFCFA59466'
+    @response.currency.should == 'EUR'
+  end
+end
+
 describe "AbnAmro::Internetkassa::Response, with a successful payment" do
   before do
     @response = AbnAmro::Internetkassa::Response.new(fixture(:succeeded))
