@@ -26,17 +26,19 @@ module AbnAmro
     PRODUCTION_URL   = "https://internetkassa.abnamro.nl/ncol/prod/orderstandard.asp"
     TEST_URL         = "https://internetkassa.abnamro.nl/ncol/test/orderstandard.asp"
     
-    attr_accessor :order_id, :amount, :description, :currency, :language
+    attr_reader :params
+    
+    attr_accessor :order_id, :amount, :description, :currency, :language, :url_variable
     attr_accessor :accept_url, :decline_url, :exception_url, :cancel_url
     
-    def initialize(options = {})
-      @options = {}
+    def initialize(params = {})
+      @params = {}
       
-      DEFAULT_VALUES.merge(options).each do |k,v|
+      DEFAULT_VALUES.merge(params).each do |k,v|
         if respond_to?("#{k}=")
           send("#{k}=", v)
         else
-          @options[k] = v
+          @params[k] = v
         end
       end
     end
@@ -49,7 +51,7 @@ module AbnAmro
     
     def data
       verify_values!
-      @options.merge(
+      @params.merge(
         :PSPID        => merchant_id,
         :orderID      => @order_id,
         :amount       => @amount,
@@ -57,11 +59,12 @@ module AbnAmro
         :language     => @language,
         :COM          => @description,
         :SHASign      => signature,
+        :PARAMVAR     => @url_variable,
         :accepturl    => @accept_url,
         :declineurl   => @decline_url,
         :exceptionurl => @exception_url,
         :cancelurl    => @cancel_url
-      )
+      ).delete_if { |key, value| value.nil? || value.to_s.empty? }
     end
     
     private

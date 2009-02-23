@@ -44,7 +44,8 @@ describe "AbnAmro::Internetkassa, an instance" do
       :order_id => 123,
       :amount => 1000,
       :description => "HappyHardcore vol. 123 - the ballads",
-      :endpoint_url => "http://example.com/payments"
+      :endpoint_url => "http://example.com/payments",
+      :url_variable => ":id"
     }
     @instance = AbnAmro::Internetkassa.new(@valid_attributes)
   end
@@ -65,6 +66,10 @@ describe "AbnAmro::Internetkassa, an instance" do
   it "should have merged default values" do
     @instance.currency.should == 'EUR'
     @instance.language.should == 'nl_NL'
+  end
+  
+  it "should return the url_variable" do
+    @instance.url_variable.should == ":id"
   end
   
   it "should have access to the pspid/merchant_id" do
@@ -97,6 +102,7 @@ describe "AbnAmro::Internetkassa, an instance" do
       :language     => @instance.language,
       :COM          => @instance.description,
       :SHASign      => @instance.send(:signature),
+      :PARAMVAR     => @instance.url_variable,
       :accepturl    => @valid_attributes[:endpoint_url],
       :declineurl   => @valid_attributes[:endpoint_url],
       :exceptionurl => @valid_attributes[:endpoint_url],
@@ -119,11 +125,20 @@ describe "AbnAmro::Internetkassa, an instance" do
       :language     => @instance.language,
       :COM          => @instance.description,
       :SHASign      => @instance.send(:signature),
+      :PARAMVAR     => @instance.url_variable,
       :accepturl    => @valid_attributes[:endpoint_url],
       :declineurl   => @valid_attributes[:endpoint_url],
       :exceptionurl => @valid_attributes[:endpoint_url],
       :cancelurl    => @valid_attributes[:endpoint_url],
       :TITLE        => 'My Transaction'
     }
+  end
+  
+  it "should not return blank values in the `data'" do
+    @instance.url_variable = nil
+    @instance.data.should.not.has_key :PARAMVAR
+    
+    @instance.url_variable = ''
+    @instance.data.should.not.has_key :PARAMVAR
   end
 end
