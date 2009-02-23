@@ -45,7 +45,8 @@ describe "AbnAmro::Internetkassa, an instance" do
       :amount => 1000,
       :description => "HappyHardcore vol. 123 - the ballads",
       :endpoint_url => "http://example.com/payments",
-      :url_variable => ":id"
+      :url_variable => ":id",
+      :endpoint_params => [[:session_id, 'abcde12345'], [:message, '“Thanks for your purchase”']]
     }
     @instance = AbnAmro::Internetkassa.new(@valid_attributes)
   end
@@ -70,6 +71,10 @@ describe "AbnAmro::Internetkassa, an instance" do
   
   it "should return the url_variable" do
     @instance.url_variable.should == ":id"
+  end
+  
+  it "should return the extra params" do
+    @instance.endpoint_params.should == [[:session_id, 'abcde12345'], [:message, '“Thanks for your purchase”']]
   end
   
   it "should have access to the pspid/merchant_id" do
@@ -103,6 +108,7 @@ describe "AbnAmro::Internetkassa, an instance" do
       :COM          => @instance.description,
       :SHASign      => @instance.send(:signature),
       :PARAMVAR     => @instance.url_variable,
+      :PARAMPLUS    => "session_id=abcde12345&message=%E2%80%9CThanks+for+your+purchase%E2%80%9D",
       :accepturl    => @valid_attributes[:endpoint_url],
       :declineurl   => @valid_attributes[:endpoint_url],
       :exceptionurl => @valid_attributes[:endpoint_url],
@@ -126,6 +132,7 @@ describe "AbnAmro::Internetkassa, an instance" do
       :COM          => @instance.description,
       :SHASign      => @instance.send(:signature),
       :PARAMVAR     => @instance.url_variable,
+      :PARAMPLUS    => "session_id=abcde12345&message=%E2%80%9CThanks+for+your+purchase%E2%80%9D",
       :accepturl    => @valid_attributes[:endpoint_url],
       :declineurl   => @valid_attributes[:endpoint_url],
       :exceptionurl => @valid_attributes[:endpoint_url],

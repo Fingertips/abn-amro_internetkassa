@@ -1,5 +1,6 @@
 require 'abn-amro/internetkassa/response'
 require "digest/sha1"
+require "cgi"
 
 module AbnAmro
   class Internetkassa
@@ -28,8 +29,9 @@ module AbnAmro
     
     attr_reader :params
     
-    attr_accessor :order_id, :amount, :description, :currency, :language, :url_variable
+    attr_accessor :order_id, :amount, :description, :currency, :language
     attr_accessor :accept_url, :decline_url, :exception_url, :cancel_url
+    attr_accessor :url_variable, :endpoint_params
     
     def initialize(params = {})
       @params = {}
@@ -60,6 +62,7 @@ module AbnAmro
         :COM          => @description,
         :SHASign      => signature,
         :PARAMVAR     => @url_variable,
+        :PARAMPLUS    => url_encoded_endpoint_params,
         :accepturl    => @accept_url,
         :declineurl   => @decline_url,
         :exceptionurl => @exception_url,
@@ -85,6 +88,11 @@ module AbnAmro
     
     def signature
       Digest::SHA1.hexdigest("#{@order_id}#{@amount}#{@currency}#{merchant_id}#{passphrase}").upcase
+    end
+    
+    def url_encoded_endpoint_params
+      return unless @endpoint_params
+      @endpoint_params.map { |k,v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&')
     end
   end
 end
