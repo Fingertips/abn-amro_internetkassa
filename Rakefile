@@ -52,3 +52,13 @@ namespace :test do
     sh 'open form_test.html'
   end
 end
+
+begin
+  require 'jewelry_portfolio/tasks'
+  JewelryPortfolio::Tasks.new do |t|
+    t.account = 'Fingertips'
+    t.name = 'abn-amro_internetkassa'
+  end
+rescue LoadError
+  puts "JewelryPortfolio not available. Install it with: sudo gem install Fingertips-jewelry_portfolio -s http://gems.github.com"
+end
